@@ -12,7 +12,7 @@
   =========================*/
 int server_handshake(int *to_client) {
   mkfifo("wkp", 0777);
-  printf("SERVER: mk wkp finished\n");
+  printf("SERVER: mk wkp finished. waiting for client.\n");
   int wkp = open("wkp", O_RDONLY);
   char * pvt = malloc(BUFFER_SIZE);
   read(wkp, pvt, BUFFER_SIZE);
@@ -25,7 +25,7 @@ int server_handshake(int *to_client) {
   char * hey = malloc(BUFFER_SIZE);
   read(wkp,hey,BUFFER_SIZE);
   printf("SERVER: got message back %s\n", hey);
-  printf("SERVER: can send and recieve\n");
+  printf("SERVER: can send and receive\n");
   free(hey);
   return wkp;
 }
@@ -42,10 +42,11 @@ int server_handshake(int *to_client) {
   =========================*/
 int client_handshake(int *to_server) {
   mkfifo("pvt", 0777);
-  printf("CLIENT: mk pvt pipe finished. waiting for client. \n");
+  printf("CLIENT: mk pvt pipe finished. \n");
   *to_server = open("wkp", O_WRONLY);
     if(*to_server == -1){
         printf("CLIENT: can't open wkp. make sure server is running. %s\n", strerror(errno));
+        remove("pvt");
         exit(1);
     }
   write(*to_server, "pvt", BUFFER_SIZE);
@@ -58,6 +59,6 @@ int client_handshake(int *to_server) {
   printf("CLIENT: removed pvt pipe\n");
   write(*to_server, ACK, BUFFER_SIZE);
   printf("CLIENT: sent servermsg back through wkp %s\n", servermsg);
-  printf("CLIENT: can send and recieve\n");
+  printf("CLIENT: can send and receive\n");
   return pvt;
 }
