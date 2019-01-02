@@ -24,7 +24,7 @@ int main() {
       printf("SERVER: ready to take new client\n");
       char *friends = malloc(BUFFER_SIZE);
       while(read(from_client, friends, BUFFER_SIZE)){
-          printf("DDDDDF%sFDDDDD",friends);
+          //printf("DDDDDF%sFDDDDD",friends);
           printf("SERVER-message-receive: %s\n",friends);
           char * men = secret_sauce(friends);
           write(to_client, men, BUFFER_SIZE);
